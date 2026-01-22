@@ -1,117 +1,56 @@
-import os
 import streamlit as st
+import os
 import time
 
 from cipher.encrypt import encrypt
 from cipher.decrypt import decrypt
 from cipher.config import CARS, CHARSET, MODULO
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
-
 # ======================================================
-# VEHICLE UI DATA
+# VEHICLE DATA (gunakan path relatif saja)
 # ======================================================
 VEHICLE_DATA = {
     "FTV": {
         "name": "2012 Fortuner TRD",
-        "thumb": os.path.join(PROJECT_ROOT, "assets", "thumbs", "fortuner.png"),
-        "image": os.path.join(PROJECT_ROOT, "assets", "full", "fortuner.png"),
+        "thumb": "assets/thumbs/fortuner.png",
+        "image": "assets/full/fortuner.png",
     },
     "A91": {
         "name": "2017 Xpander Sport",
-        "thumb": os.path.join(PROJECT_ROOT, "assets", "thumbs", "xpander.png"),
-        "image": os.path.join(PROJECT_ROOT, "assets", "full", "xpander.png"),
+        "thumb": "assets/thumbs/xpander.png",
+        "image": "assets/full/xpander.png",
     },
     "D56": {
         "name": "2014 Pajero Sport",
-        "thumb": os.path.join(PROJECT_ROOT, "assets", "thumbs", "pajero_d56.png"),
-        "image": os.path.join(PROJECT_ROOT, "assets", "full", "pajero_d56.png"),
+        "thumb": "assets/thumbs/pajero_d56.png",
+        "image": "assets/full/pajero_d56.png",
     },
     "N15": {
         "name": "2017 Pajero Sport",
-        "thumb": os.path.join(PROJECT_ROOT, "assets", "thumbs", "pajero_n15.png"),
-        "image": os.path.join(PROJECT_ROOT, "assets", "full", "pajero_n15.png"),
+        "thumb": "assets/thumbs/pajero_n15.png",
+        "image": "assets/full/pajero_n15.png",
     },
 }
 
 # ======================================================
-# VISUALIZATION CORE (VERTICAL FLOW)
-# ======================================================
-def visualize_process(text, engine_key, mode="encrypt"):
-    speeds = CARS[engine_key]
-
-    log_container = st.container()
-    gear_container = st.container()
-
-    log_box = log_container.empty()
-    gear_box = gear_container.empty()
-
-    log = ""
-
-    for i, char in enumerate(text):
-        if char not in CHARSET:
-            continue
-
-        gear_index = i % len(speeds)
-        speed = speeds[gear_index]
-
-        idx = CHARSET.index(char)
-
-        if mode == "encrypt":
-            result_index = (idx + speed) % MODULO
-            result_char = CHARSET[result_index]
-            calc = f"({idx} + {speed}) mod 36"
-            label_in, label_out = "Plaintext", "Ciphertext"
-        else:
-            result_index = (idx - speed) % MODULO
-            result_char = CHARSET[result_index]
-            calc = f"({idx} - {speed}) mod 36"
-            label_in, label_out = "Ciphertext", "Plaintext"
-
-        # Update log (TOP)
-        log += (
-            f"Step {i+1}\n"
-            f"{label_in} : {char} (Index {idx})\n"
-            f"Gear      : {gear_index+1}\n"
-            f"Speed     : {speed}\n"
-            f"{label_out}: {calc} = {result_index} → {result_char}\n\n"
-        )
-        log_box.code(log)
-
-        # Update gear shifting (BOTTOM)
-        gear_text = "### Gear Shifting Status\n"
-        for g, val in enumerate(speeds):
-            marker = "▶" if g == gear_index else " "
-            gear_text += f"{marker} Gear {g+1}: `{val}`\n"
-        gear_box.markdown(gear_text)
-
-        time.sleep(0.25)
-
-# ======================================================
-# UI COMPONENTS
+# UI Components
 # ======================================================
 def vehicle_gallery():
-    st.subheader("Database Kendaraan Cipher")
+    st.subheader("🚘 Database Kendaraan Cipher")
     cols = st.columns(len(VEHICLE_DATA))
-
     for col, (key, data) in zip(cols, VEHICLE_DATA.items()):
         with col:
-            if os.path.isfile(data["thumb"]):
-                st.image(data["thumb"], width=180)
-            else:
-                st.error(f"File thumbnail tidak ditemukan:\n{data['thumb']}")
+            thumb_path = data["thumb"]
+            st.image(thumb_path, width=180)
             st.caption(data["name"])
             st.caption(f"Engine: {key}")
 
 def engine_selector():
-    st.subheader("Cipher Engine Selection")
-
+    st.subheader("⚙️ Pilih Cipher Engine (Key 1)")
     labels = {
         f"{key} — {data['name']}": key
         for key, data in VEHICLE_DATA.items()
     }
-
     label = st.selectbox("Engine", list(labels.keys()))
     engine_key = labels[label]
     data = VEHICLE_DATA[engine_key]
@@ -120,14 +59,19 @@ def engine_selector():
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        st.image(data["image"], width=600)
+        image_path = data["image"]
+        st.write(f"Engine image path: {image_path}")
+        st.write(f"Image exists: {os.path.isfile(image_path)}")
+        st.image(image_path, width=600)
 
     with col2:
-        st.success(f"Engine Active: {engine_key}")
+        st.success(f"Engine Aktif: {engine_key}")
         st.caption(data["name"])
-        st.markdown("### Gear Table")
+        st.markdown("### ⚙️ Gear Shifting")
         for i, g in enumerate(CARS[engine_key], start=1):
             st.markdown(f"Gear {i}: `{g}`")
+        st.markdown("### 🔑 Cipher Key 2")
+        st.code(CARS[engine_key])
 
     return engine_key
 
