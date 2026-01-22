@@ -12,22 +12,22 @@ from cipher.config import CARS, CHARSET, MODULO
 VEHICLE_DATA = {
     "FTV": {
         "name": "2012 Fortuner TRD",
-        "thumb": "assets/thumbs/fortuner.png",
+        "thumb": "assets/fortuner.png",
         "image": "assets/fortuner_full.png",
     },
     "A91": {
         "name": "2017 Xpander Sport",
-        "thumb": "assets/thumbs/xpander.png",
+        "thumb": "assets/xpander.png",
         "image": "assets/xpander_full.png",
     },
     "D56": {
         "name": "2014 Pajero Sport",
-        "thumb": "assets/thumbs/pajero_d56.png",
+        "thumb": "assets/pajero_d56.png",
         "image": "assets/pajero_d56_full.png",
     },
     "N15": {
         "name": "2017 Pajero Sport",
-        "thumb": "assets/thumbs/pajero_n15.png",
+        "thumb": "assets/pajero_n15.png",
         "image": "assets/pajero_n15_full.png",
     },
 }
