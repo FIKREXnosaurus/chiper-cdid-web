@@ -1,6 +1,10 @@
 import os
 import streamlit as st
 
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
+BANNER_PATH = os.path.join(PROJECT_ROOT, "assets", "banner.png")
+
 def home_page():
     st.title("Drag Cipher Transmission (DCT-36)")
 

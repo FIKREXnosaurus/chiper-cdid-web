@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import time
 
@@ -5,29 +6,32 @@ from cipher.encrypt import encrypt
 from cipher.decrypt import decrypt
 from cipher.config import CARS, CHARSET, MODULO
 
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
+
 # ======================================================
 # VEHICLE UI DATA
 # ======================================================
 VEHICLE_DATA = {
     "FTV": {
         "name": "2012 Fortuner TRD",
-        "thumb": "assets/thumbs/fortuner.png",
-        "image": "assets/full/fortuner.png",
+        "thumb": os.path.join(PROJECT_ROOT, "assets", "thumbs", "fortuner.png"),
+        "image": os.path.join(PROJECT_ROOT, "assets", "full", "fortuner.png"),
     },
     "A91": {
         "name": "2017 Xpander Sport",
-        "thumb": "assets/thumbs/xpander.png",
-        "image": "assets/full/xpander.png",
+        "thumb": os.path.join(PROJECT_ROOT, "assets", "thumbs", "xpander.png"),
+        "image": os.path.join(PROJECT_ROOT, "assets", "full", "xpander.png"),
     },
     "D56": {
         "name": "2014 Pajero Sport",
-        "thumb": "assets/thumbs/pajero_d56.png",
-        "image": "assets/full/pajero_d56.png",
+        "thumb": os.path.join(PROJECT_ROOT, "assets", "thumbs", "pajero_d56.png"),
+        "image": os.path.join(PROJECT_ROOT, "assets", "full", "pajero_d56.png"),
     },
     "N15": {
         "name": "2017 Pajero Sport",
-        "thumb": "assets/thumbs/pajero_n15.png",
-        "image": "assets/full/pajero_n15.png",
+        "thumb": os.path.join(PROJECT_ROOT, "assets", "thumbs", "pajero_n15.png"),
+        "image": os.path.join(PROJECT_ROOT, "assets", "full", "pajero_n15.png"),
     },
 }
 
@@ -93,9 +97,12 @@ def vehicle_gallery():
 
     for col, (key, data) in zip(cols, VEHICLE_DATA.items()):
         with col:
-            st.image(data["thumb"], width=180)
+            if os.path.isfile(data["thumb"]):
+                st.image(data["thumb"], width=180)
+            else:
+                st.error(f"File thumbnail tidak ditemukan:\n{data['thumb']}")
             st.caption(data["name"])
-            st.caption(f"Engine Code: {key}")
+            st.caption(f"Engine: {key}")
 
 def engine_selector():
     st.subheader("Cipher Engine Selection")
