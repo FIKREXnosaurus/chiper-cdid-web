@@ -16,7 +16,7 @@ def home_page():
     if not os.path.isfile(banner_path):
         st.error("File banner.png tidak ditemukan di folder assets!")
     else:
-        st.image(banner_path, width=1000)
+        st.image("assets/banner.png", width=1000)
 
     st.markdown("""
     **Drag Cipher Transmission (DCT-36)** adalah sistem kriptografi orisinal
